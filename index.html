@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDWARD OTP - Cyber Security Terminal</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Variables */
+        :root {
+            --cyber-cyan: hsl(180, 100%, 50%);
+            --cyber-green: hsl(120, 100%, 50%);
+            --cyber-pink: hsl(330, 100%, 50%);
+            --cyber-purple: hsl(270, 100%, 65%);
+            --cyber-yellow: hsl(60, 100%, 50%);
+            --cyber-orange: hsl(30, 100%, 50%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: black;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 25% 25%, hsla(120, 100%, 50%, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, hsla(180, 100%, 50%, 0.1) 0%, transparent 50%);
+        }
+
+        /* Animations */
+        @keyframes rainbow-text {
+            0% { 
+                background-position: 0% 50%;
+                filter: hue-rotate(0deg);
+            }
+            50% { 
+                background-position: 100% 50%;
+                filter: hue-rotate(180deg);
+            }
+            100% { 
+                background-position: 0% 50%;
+                filter: hue-rotate(360deg);
+            }
+        }
+
+        @keyframes rainbow-border {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes cyber-glow {
+            from { box-shadow: 0 0 20px currentColor; }
+            to { box-shadow: 0 0 30px currentColor, 0 0 40px currentColor; }
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Utility Classes */
+        .rainbow-text {
+            animation: rainbow-text 3s linear infinite;
+            font-weight: 900;
+            background: linear-gradient(
+                45deg,
+                var(--cyber-pink),
+                var(--cyber-orange),
+                var(--cyber-yellow),
+                var(--cyber-green),
+                var(--cyber-cyan),
+                hsl(240, 100%, 65%),
+                var(--cyber-purple)
+            );
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .rainbow-border {
+            background: linear-gradient(
+                45deg,
+                var(--cyber-pink),
+                var(--cyber-orange),
+                var(--cyber-yellow),
+                var(--cyber-green),
+                var(--cyber-cyan),
+                hsl(240, 100%, 65%),
+                var(--cyber-purple)
+            );
+            background-size: 400% 400%;
+            animation: rainbow-border 3s ease infinite;
+            padding: 2px;
+            border-radius: 50%;
+        }
+
+        .cyber-glow {
+            box-shadow: 0 0 20px currentColor;
+            animation: cyber-glow 2s ease-in-out infinite alternate;
+        }
+
+        .cyber-glow-cyan { box-shadow: 0 0 20px var(--cyber-cyan); }
+        .cyber-glow-green { box-shadow: 0 0 20px var(--cyber-green); }
+        .cyber-glow-pink { box-shadow: 0 0 20px var(--cyber-pink); }
+        .cyber-glow-yellow { box-shadow: 0 0 20px var(--cyber-yellow); }
+
+        .flicker { animation: flicker 1.5s infinite linear; }
+        .courier-font { font-family: 'Courier Prime', monospace; }
+
+        /* Header Styles */
+        .header {
+            position: relative;
+            z-index: 50;
+        }
+
+        .menu-button {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 50;
+            padding: 0.5rem;
+            background: #111827;
+            border: 1px solid var(--cyber-cyan);
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .menu-button:hover {
+            background: #1f2937;
+        }
+
+        .hamburger {
+            width: 1.5rem;
+            height: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 1.25rem;
+            height: 0.125rem;
+            background: var(--cyber-cyan);
+            margin-bottom: 0.25rem;
+            transition: all 0.3s;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(0.375rem, 0.375rem);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(0.375rem, -0.375rem);
+        }
+
+        /* Side Navigation */
+        .side-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20rem;
+            height: 100vh;
+            background: #111827;
+            border-right: 1px solid var(--cyber-cyan);
+            transform: translateX(-100%);
+            transition: transform 0.3s;
+            z-index: 40;
+        }
+
+        .side-nav.open {
+            transform: translateX(0);
+        }
+
+        .nav-content {
+            padding: 1.5rem;
+            margin-top: 4rem;
+        }
+
+        .nav-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--cyber-cyan);
+            margin-bottom: 2rem;
+        }
+
+        .nav-button {
+            width: 100%;
+            text-align: left;
+            padding: 1rem;
+            background: #1f2937;
+            border: 1px solid;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .nav-button:hover {
+            background: #374151;
+        }
+
+        .nav-button.green {
+            border-color: var(--cyber-green);
+            box-shadow: 0 0 20px var(--cyber-green);
+        }
+
+        .nav-button.pink {
+            border-color: var(--cyber-pink);
+            box-shadow: 0 0 20px var(--cyber-pink);
+        }
+
+        .nav-button-title {
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-button-desc {
+            font-size: 0.875rem;
+            color: #9ca3af;
+        }
+
+        /* Overlay */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 30;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Main Content */
+        .main-content {
+            min-height: 100vh;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-top: 5rem;
+            padding: 5rem 1rem 0;
+        }
+
+        .profile-container {
+            margin-bottom: 2rem;
+        }
+
+        .profile-image {
+            width: 8rem;
+            height: 8rem;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #374151;
+        }
+
+        .main-title {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            color: var(--cyber-cyan);
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .danger-card {
+            max-width: 64rem;
+            margin: 0 auto 1.5rem;
+            background: #7f1d1d;
+            border: 1px solid #dc2626;
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+
+        .danger-title {
+            color: #fca5a5;
+            font-weight: bold;
+            font-size: 1.125rem;
+        }
+
+        .danger-desc {
+            color: #fecaca;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            max-width: 72rem;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .grid-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .grid-3 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .card {
+            background: #111827;
+            border: 1px solid;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+
+        .card.cyan {
+            border-color: var(--cyber-cyan);
+            box-shadow: 0 0 20px var(--cyber-cyan);
+        }
+
+        .card.green {
+            border-color: var(--cyber-green);
+            box-shadow: 0 0 20px var(--cyber-green);
+        }
+
+        .card.yellow {
+            border-color: var(--cyber-yellow);
+            box-shadow: 0 0 20px var(--cyber-yellow);
+        }
+
+        .card.purple {
+            border-color: var(--cyber-purple);
+            box-shadow: 0 0 20px var(--cyber-purple);
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-online {
+            color: var(--cyber-green);
+        }
+
+        .log-entry {
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        /* Virtual Numbers */
+        .virtual-numbers {
+            display: none;
+        }
+
+        .virtual-numbers.active {
+            display: block;
+        }
+
+        .number-card {
+            background: #1f2937;
+            border: 1px solid;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .number-card:hover {
+            background: #374151;
+        }
+
+        .number-card.india {
+            border-color: #f97316;
+        }
+
+        .number-card.pakistan {
+            border-color: var(--cyber-green);
+        }
+
+        .number-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .flag {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .number-text {
+            color: var(--cyber-green);
+            font-size: 1.125rem;
+        }
+
+        .number-status {
+            font-size: 0.875rem;
+            color: #9ca3af;
+            margin-top: 0.5rem;
+        }
+
+        /* SMS Messages */
+        .sms-message {
+            background: #1f2937;
+            border-left: 4px solid;
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .sms-message.whatsapp {
+            border-left-color: var(--cyber-green);
+        }
+
+        .sms-message.sms {
+            border-left-color: var(--cyber-cyan);
+        }
+
+        .sms-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sms-content {
+            font-size: 0.875rem;
+            color: #9ca3af;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #111827;
+            border: 1px solid var(--cyber-pink);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            max-width: 28rem;
+            width: 90%;
+            box-shadow: 0 0 20px var(--cyber-pink);
+        }
+
+        .modal-title {
+            color: var(--cyber-pink);
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .modal-desc {
+            color: #9ca3af;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            background: #1f2937;
+            border: 1px solid var(--cyber-pink);
+            border-radius: 0.375rem;
+            padding: 0.5rem;
+            color: white;
+        }
+
+        .form-input::placeholder {
+            color: #6b7280;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--cyber-cyan);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .button {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .button.primary {
+            background: var(--cyber-pink);
+            color: white;
+        }
+
+        .button.primary:hover {
+            background: hsl(330, 100%, 40%);
+        }
+
+        .button.secondary {
+            background: #374151;
+            color: white;
+            border: 1px solid #6b7280;
+        }
+
+        .button.secondary:hover {
+            background: #4b5563;
+        }
+
+        /* SMS Display */
+        .sms-display {
+            display: none;
+            max-width: 72rem;
+            margin: 2rem auto 0;
+            padding: 0 1rem;
+        }
+
+        .sms-display.active {
+            display: block;
+        }
+
+        .sms-display-card {
+            background: #111827;
+            border: 2px solid transparent;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+
+        .sms-display-inner {
+            background: #111827;
+            border-radius: 0.5rem;
+        }
+
+        .sms-feed-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .sms-terminal {
+            background: black;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .target-info {
+            color: var(--cyber-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .sms-log {
+            height: 16rem;
+            overflow-y: auto;
+        }
+
+        .system-message {
+            color: var(--cyber-cyan);
+            margin-bottom: 0.5rem;
+        }
+
+        .new-sms {
+            background: #1f2937;
+            border-left: 2px solid var(--cyber-pink);
+            padding: 0.75rem;
+            margin-top: 1rem;
+            border-radius: 0.375rem;
+        }
+
+        .sms-header-new {
+            color: var(--cyber-pink);
+            font-weight: bold;
+        }
+
+        .sms-body {
+            color: white;
+            margin: 0.25rem 0;
+        }
+
+        .sms-meta {
+            color: #9ca3af;
+            font-size: 0.75rem;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <button class="menu-button" onclick="toggleMenu()">
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </button>
+
+        <!-- Side Navigation -->
+        <nav class="side-nav" id="sideNav">
+            <div class="nav-content">
+                <h2 class="nav-title">CYBER MENU</h2>
+                <ul style="list-style: none;">
+                    <li>
+                        <button class="nav-button green" onclick="showReceiveOtp()">
+                            <div class="nav-button-title" style="color: var(--cyber-green);">📱 RECEIVE OTP</div>
+                            <p class="nav-button-desc">Access virtual numbers for OTP reception</p>
+                        </button>
+                    </li>
+                    <li>
+                        <button class="nav-button pink" onclick="showSmsHijack()">
+                            <div class="nav-button-title" style="color: var(--cyber-pink);">🔓 SMS HIJACK</div>
+                            <p class="nav-button-desc">Monitor SMS traffic (Demo Only)</p>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Overlay -->
+        <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="profile-container">
+                <div class="rainbow-border" style="display: inline-block; margin-bottom: 1.5rem;">
+                    <img 
+                        src="https://i.postimg.cc/3JmtQVTm/Picsart-25-06-03-13-04-25-446.png" 
+                        alt="Edward Profile" 
+                        class="profile-image"
+                    />
+                </div>
+            </div>
+            
+            <h1 class="main-title rainbow-text">
+                EDWARD OTP
+            </h1>
+            
+            <div class="subtitle flicker courier-font">
+                {'>>> CYBER SECURITY TERMINAL <<<'}
+            </div>
+            
+            <div class="danger-card cyber-glow">
+                <p class="danger-title">⚠️ DANGER ZONE - AUTHORIZED ACCESS ONLY ⚠️</p>
+                <p class="danger-desc">This is a demonstration interface for educational purposes only</p>
+            </div>
+        </section>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Default Dashboard -->
+            <div id="defaultDashboard" class="grid grid-2">
+                <div class="card cyan">
+                    <h3 class="card-title" style="color: var(--cyber-cyan);">🛡️ SYSTEM STATUS</h3>
+                    <div class="courier-font" style="font-size: 0.875rem;">
+                        <div class="status-row">
+                            <span>Network:</span>
+                            <span class="status-online">ONLINE</span>
+                        </div>
+                        <div class="status-row">
+                            <span>Encryption:</span>
+                            <span class="status-online">AES-256</span>
+                        </div>
+                        <div class="status-row">
+                            <span>Firewall:</span>
+                            <span class="status-online">ACTIVE</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card purple">
+                    <h3 class="card-title" style="color: var(--cyber-purple);">📊 ACTIVITY LOG</h3>
+                    <div class="courier-font" style="font-size: 0.875rem;">
+                        <div class="log-entry" style="color: var(--cyber-yellow);">12:34:56 - System initialized</div>
+                        <div class="log-entry" style="color: var(--cyber-green);">12:35:02 - Security protocols enabled</div>
+                        <div class="log-entry" style="color: var(--cyber-cyan);">12:35:08 - Dashboard accessed</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Virtual Numbers Section -->
+            <div id="virtualNumbers" class="virtual-numbers">
+                <!-- Virtual Numbers Card -->
+                <div class="card green" style="margin-bottom: 1.5rem;">
+                    <h2 class="card-title" style="color: var(--cyber-green);">📱 VIRTUAL NUMBERS - OTP RECEPTION</h2>
+                    <p style="color: #9ca3af; margin-bottom: 1.5rem;">Select a virtual number to receive WhatsApp and SMS OTPs</p>
+                    
+                    <div class="grid grid-3">
+                        <!-- Indian Numbers -->
+                        <div class="number-card india">
+                            <div class="number-header">
+                                <span class="flag">🇮🇳</span>
+                                <span style="font-weight: bold;">INDIA</span>
+                            </div>
+                            <div class="number-text courier-font">+91 98765 43210</div>
+                            <div class="number-status">
+                                Status: <span class="status-online">Active</span>
+                            </div>
+                        </div>
+
+                        <div class="number-card india">
+                            <div class="number-header">
+                                <span class="flag">🇮🇳</span>
+                                <span style="font-weight: bold;">INDIA</span>
+                            </div>
+                            <div class="number-text courier-font">+91 87654 32109</div>
+                            <div class="number-status">
+                                Status: <span class="status-online">Active</span>
+                            </div>
+                        </div>
+
+                        <!-- Pakistani Numbers -->
+                        <div class="number-card pakistan">
+                            <div class="number-header">
+                                <span class="flag">🇵🇰</span>
+                                <span style="font-weight: bold;">PAKISTAN</span>
+                            </div>
+                            <div class="number-text courier-font">+92 333 1234567</div>
+                            <div class="number-status">
+                                Status: <span class="status-online">Active</span>
+                            </div>
+                        </div>
+
+                        <div class="number-card pakistan">
+                            <div class="number-header">
+                                <span class="flag">🇵🇰</span>
+                                <span style="font-weight: bold;">PAKISTAN</span>
+                            </div>
+                            <div class="number-text courier-font">+92 321 7654321</div>
+                            <div class="number-status">
+                                Status: <span class="status-online">Active</span>
+                            </div>
+                        </div>
+
+                        <div class="number-card pakistan">
+                            <div class="number-header">
+                                <span class="flag">🇵🇰</span>
+                                <span style="font-weight: bold;">PAKISTAN</span>
+                            </div>
+                            <div class="number-text courier-font">+92 300 9876543</div>
+                            <div class="number-status">
+                                Status: <span class="status-online">Active</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent OTPs Card -->
+                <div class="card yellow">
+                    <h3 class="card-title" style="color: var(--cyber-yellow);">📨 RECENT OTPs</h3>
+                    <div>
+                        <div class="sms-message whatsapp">
+                            <div class="sms-header">
+                                <span class="courier-font" style="color: var(--cyber-green);">
+                                    WhatsApp: Your WhatsApp verification code is: 123456
+                                </span>
+                                <span style="font-size: 0.875rem; color: #9ca3af;">
+                                    12:30:45
+                                </span>
+                            </div>
+                            <div class="sms-content">From: WhatsApp</div>
+                        </div>
+
+                        <div class="sms-message sms">
+                            <div class="sms-header">
+                                <span class="courier-font" style="color: var(--cyber-cyan);">
+                                    SMS: Your verification code is: 789012
+                                </span>
+                                <span style="font-size: 0.875rem; color: #9ca3af;">
+                                    12:25:30
+                                </span>
+                            </div>
+                            <div class="sms-content">From: SMS-Service</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SMS Display -->
+        <div id="smsDisplay" class="sms-display">
+            <div class="sms-display-card rainbow-border">
+                <div class="sms-display-inner">
+                    <h3 class="sms-feed-title rainbow-text">
+                        📱 LIVE SMS FEED
+                    </h3>
+                    <div class="sms-terminal courier-font">
+                        <div class="target-info">
+                            Target: <span id="targetNumber"></span>
+                        </div>
+                        <div class="sms-log" id="smsLog">
+                            <div class="system-message">>>> Connecting to target...</div>
+                            <div class="system-message">>>> Connection established</div>
+                            <div class="system-message">>>> Monitoring SMS traffic</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- SMS Hijack Modal -->
+    <div id="hijackModal" class="modal">
+        <div class="modal-content">
+            <h2 class="modal-title">🔓 SMS HIJACK (DEMO)</h2>
+            <p class="modal-desc">Enter target number for demonstration</p>
+            
+            <form onsubmit="startHijack(event)">
+                <div class="form-group">
+                    <label for="targetNumberInput" class="form-label">Target Number:</label>
+                    <input
+                        id="targetNumberInput"
+                        type="tel"
+                        placeholder="+92333xxxxxxx"
+                        class="form-input"
+                        required
+                    />
+                </div>
+                
+                <div class="button-group">
+                    <button type="submit" class="button primary">START DEMO</button>
+                    <button type="button" class="button secondary" onclick="closeHijackModal()">CANCEL</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let isMenuOpen = false;
+        let currentSection = 'default';
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            const sideNav = document.getElementById('sideNav');
+            const overlay = document.getElementById('overlay');
+            const hamburger = document.getElementById('hamburger');
+            
+            if (isMenuOpen) {
+                sideNav.classList.add('open');
+                overlay.classList.add('active');
+                hamburger.classList.add('active');
+            } else {
+                sideNav.classList.remove('open');
+                overlay.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        }
+
+        function showReceiveOtp() {
+            currentSection = 'receiveOtp';
+            document.getElementById('defaultDashboard').style.display = 'none';
+            document.getElementById('virtualNumbers').classList.add('active');
+            document.getElementById('smsDisplay').classList.remove('active');
+            toggleMenu();
+        }
+
+        function showSmsHijack() {
+            document.getElementById('hijackModal').classList.add('active');
+            toggleMenu();
+        }
+
+        function closeHijackModal() {
+            document.getElementById('hijackModal').classList.remove('active');
+            document.getElementById('targetNumberInput').value = '';
+        }
+
+        function startHijack(event) {
+            event.preventDefault();
+            const targetNumber = document.getElementById('targetNumberInput').value;
+            
+            if (targetNumber.trim()) {
+                // Show SMS display
+                document.getElementById('targetNumber').textContent = targetNumber;
+                document.getElementById('defaultDashboard').style.display = 'none';
+                document.getElementById('virtualNumbers').classList.remove('active');
+                document.getElementById('smsDisplay').classList.add('active');
+                
+                // Simulate receiving SMS messages
+                simulateIncomingSMS();
+                
+                closeHijackModal();
+            }
+        }
+
+        function simulateIncomingSMS() {
+            const mockMessages = [
+                { content: "Welcome to PayPal. Your code is: 123456", sender: "PAYPAL", delay: 2000 },
+                { content: "Your Amazon verification code: 789012", sender: "AMAZON", delay: 4000 },
+                { content: "WhatsApp code: 345678", sender: "WHATSAPP", delay: 6000 }
+            ];
+
+            const smsLog = document.getElementById('smsLog');
+
+            mockMessages.forEach((msg, index) => {
+                setTimeout(() => {
+                    const newSms = document.createElement('div');
+                    newSms.className = 'new-sms';
+                    newSms.innerHTML = `
+                        <div class="sms-header-new">📨 NEW SMS:</div>
+                        <div class="sms-body">${msg.content}</div>
+                        <div class="sms-meta">
+                            From: ${msg.sender} | Time: ${new Date().toLocaleTimeString()}
+                        </div>
+                    `;
+                    smsLog.appendChild(newSms);
+                    smsLog.scrollTop = smsLog.scrollHeight;
+                }, msg.delay);
+            });
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('hijackModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeHijackModal();
+            }
+        });
+    </script>
+</body>
+</html>
